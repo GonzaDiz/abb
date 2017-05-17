@@ -8,14 +8,14 @@
 typedef struct nodo {
 	void* dato;
 	char* clave;
-	struct nodo* izq;
-	struct nodo* der;
+	nodo_t* izq;
+	nodo_t* der;
 }nodo_t;
 
 /* Definicion del abb */ 
 
 struct abb {
-	struct nodo_t* node;
+	nodo_t* nodo;
 	size_t cantidad;
 	abb_comparar_clave_t* comparar;
 	abb_destruir_dato_t* destructor;
@@ -30,27 +30,31 @@ abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 	abb->comparar = cmp;
 	abb->destructor = destruir_dato;
 	abb->cantidad = 0;
-	abb->node = NULL;
+	abb->nodo = NULL;
 	return abb;
 }
 
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
-	if(!arbol->node){
-		nodo_t nodo = malloc(sizeof(nodo));
-		if(!nodo) return NULL;
+	if(!arbol->nodo){
+		nodo_t nodo = malloc(sizeof(nodo_t));
+		if(!nodo) return false;
 		nodo->clave = clave;
 		nodo->dato = dato;
 		nodo->izq = NULL;
 		nodo->der = NULL;
-		arbol->node = nodo;
+		arbol->nodo = nodo;
 		arbol->cantidad++;
 		return true;
 	}
 
-	if(arbol->comparar(arbol->node->clave,clave) < 0){
-		abb_guardar(arbol->node->izq,clave,dato);
+	
+	if(arbol->comparar(arbol->nodo->clave,clave) < 0){
+		abb_guardar(arbol->nodo->izq,clave,dato);
 	}
-	abb_guardar(arbol->node->der,clave,dato);	
+	else if (arbol->comparar(arbol->nodo->clave,clave) > 0){
+		abb_guardar(arbol->nodo->der,clave,dato);	
+	}
+	else if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
 }
 
 size_t abb_cantidad(abb_t *arbol){
@@ -66,5 +70,9 @@ void *abb_obtener(const abb_t *arbol, const char *clave){
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
+
+}
+
+void abb_destruir(abb_t *arbol){
 
 }
