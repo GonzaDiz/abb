@@ -50,17 +50,21 @@ bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave, void *
 	return true; // PARA QUE COMPILE
 }
 
+// Busca un nodo en un arbol segun la clave, en caso de existir devuelve el nodo y en caso contrario devuelve null.
 nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
 	if (!nodo) return NULL;
+
 	if (arbol->comparar(nodo->clave,clave) == 0){
 		return nodo;
 	}
 	else if (arbol->comparar(nodo->clave,clave) > 0){
 		return buscar_nodo(nodo->izq,arbol,clave);
 	}
-	else buscar_nodo(nodo->der,arbol,clave);
+	else if (arbol->comparar(nodo->clave,clave) <0){
+		buscar_nodo(nodo->der,arbol,clave);
+	}
 
-	return NULL; //PARA QUE COMPILE
+	return NULL; //SI EL NODO NO EXISTE EN EL ARBOL DEVUELVE NULL
 }
 
 /* *****************************************************************
