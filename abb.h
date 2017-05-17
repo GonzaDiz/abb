@@ -2,6 +2,8 @@
 #define ABB_H
 
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* *****************************************************************
  *                DEFINICION DE LOS TIPOS DE DATOS
@@ -9,6 +11,7 @@
 
 struct abb;  // Definición completa en abb.c.
 typedef struct abb abb_t;
+typedef struct nodo nodo_t;
 
 
 /* *****************************************************************
@@ -29,6 +32,9 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato);
 
 void *abb_borrar(abb_t *arbol, const char *clave);
 
+// Devuelve el valor de la clave en caso de estar en el arbol.
+//PRE: el abb esta creado
+//POST: busca la clave y si es que existe devuelve el valor que contiene.
 void *abb_obtener(const abb_t *arbol, const char *clave);
 
 bool abb_pertenece(const abb_t *arbol, const char *clave);
