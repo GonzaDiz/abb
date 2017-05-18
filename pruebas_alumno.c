@@ -60,6 +60,9 @@ static void pruebas_abb_guardar(){
 	print_test("Prueba abb obtener de clave a devuelve a", abb_obtener(abb,claves[3]) == datos[3]);
 	print_test("Prueba abb pertence devuelve true con clave a", abb_pertenece(abb,claves[3]) == true);
 
+	abb_destruir(abb);
+	print_test("El arbol se destruyo correctamente",true);
+
 }
 
 /* ******************************************************************
