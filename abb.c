@@ -90,12 +90,9 @@ nodo_t* abb_buscar_recursivo(nodo_t* nodo,const abb_t* arbol, const char *clave)
 }
 
 void abb_destruir_recursivo(nodo_t* nodo){
-	if (nodo->der != NULL){
-		abb_destruir_recursivo(nodo->der);
-	}
-	if (nodo->izq != NULL){
-		abb_destruir_recursivo(nodo->izq);
-	}
+	if (nodo == NULL) return;
+	abb_destruir_recursivo(nodo->der);
+	abb_destruir_recursivo(nodo->izq);
 	free(nodo->clave);
 	free(nodo);
 }
