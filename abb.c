@@ -44,7 +44,14 @@ bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave, void *
 	else if (arbol->comparar(arbol->nodo->clave,clave) > 0){
 		abb_guardar_recursivo(arbol,arbol->nodo->der,clave,dato);	
 	}
-	else if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+	else if (arbol->comparar(arbol->nodo->clave,clave) == 0){
+		if (arbol->destructor) destructor(arbol->nodo->dato);
+		nodo->dato = dato;
+		nodo->izq = 
+		nodo->der = 
+		arbol->cantidad++;
+		return true;
+	}
 
 	return true; // PARA QUE COMPILE
 }
@@ -87,8 +94,8 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 		nodo->dato = dato;
 		nodo->izq = NULL;
 		nodo->der = NULL;
-		arbol->nodo = nodo;
-		arbol->cantidad++;
+		//arbol->nodo = nodo;
+		//arbol->cantidad++;
 		return true;
 	}
 
@@ -107,14 +114,14 @@ size_t abb_cantidad(abb_t *arbol){
 
 void *abb_obtener(const abb_t *arbol, const char *clave){
 	if (arbol->nodo == NULL) return NULL;
-	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave);
+	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave); //busco nodo segun clave
 	if (nodo == NULL) return NULL;
 	return nodo->dato;
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
 	if (arbol->nodo == NULL) return NULL;
-	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave);
+	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave); //busco nodo segun clave
 	if (nodo != NULL) return true; // Si la la clave no existe en el arbol entonces el nodo sera NULL.
 	return false;
 }
