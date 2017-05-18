@@ -37,23 +37,29 @@ char *strdup (const char *str) {
     return copia;                            
 }
 
-bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave){
-	if(arbol->comparar(arbol->nodo->clave,clave) < 0){
-		abb_guardar_recursivo(arbol,arbol->nodo->izq,clave);
+bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const char *clave){
+	printf("LLEGA ACA\n");
+
+	// Si el arbol recien esta creado entcones el primer nodo/raiz es Null
+	if (arbol->nodo == NULL ) {
+		arbol->nodo = nuevoNodo;
+		arbol->cantidad++;
+		return true;
+	}
+	else if(arbol->comparar(arbol->nodo->clave,clave) < 0){
+		printf("LLEGA ACA\n");
+		abb_guardar_recursivo(arbol,nodo->izq,nuevoNodo,clave);
 	}
 	else if (arbol->comparar(arbol->nodo->clave,clave) > 0){
-		abb_guardar_recursivo(arbol,arbol->nodo->der,clave);	
+		printf("LLEGA ACA\n");
+		abb_guardar_recursivo(arbol,nodo->der,nuevoNodo,clave);	
 	}
 	else if (arbol->comparar(arbol->nodo->clave,clave) == 0){
+		printf("LLEGA ACA\n");
 		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
-<<<<<<< HEAD
-		nodo->dato = nodo->dato;
-=======
-		nodo->dato = dato;
-		// nodo->izq = // comente para que compile
-		// nodo->der = // comente para que compile
-		arbol->cantidad++;
->>>>>>> 7022435ba5f590bfa61c6a8368998363b4e8ce5c
+		nodo->dato = nuevoNodo->dato;
+		free(nodo->clave);
+		free(nodo);
 		return true;
 	}
 
@@ -101,8 +107,10 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	nodo->der = NULL;
 	//arbol->nodo = nodo;
 	//arbol->cantidad++;
+
+	printf("LLEGA ACA\n");
 		
-	if (abb_guardar_recursivo(arbol,arbol->nodo,clave)) return true;
+	if (abb_guardar_recursivo(arbol,arbol->nodo,nodo,clave)) return true;
 
 	return true; // Para que compile
 }
