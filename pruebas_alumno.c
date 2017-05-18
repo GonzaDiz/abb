@@ -16,8 +16,8 @@
 /* ******************************************************************
  *                        PRUEBAS UNITARIAS
  * *****************************************************************/
-static void prueba_crear_abb_vacio()
-{
+static void prueba_crear_abb_vacio(){
+	printf("---------------------------PRUEBAS CREAR ABB VACIO---------------------------\n");
     abb_t* abb = abb_crear(strcmp,NULL);
     char* str = "test";
     print_test("Prueba crear abb vacio", abb);
@@ -29,17 +29,37 @@ static void prueba_crear_abb_vacio()
 }
 
 static void pruebas_abb_guardar(){
+	printf("---------------------------PRUEBAS ABB GUARDAR---------------------------\n");
 	abb_t* abb = abb_crear(strcmp,NULL);
-	char* clave = "a";
-	char* dato = "a";
-
+	char* claves[] = {"f","z","d","a"};
+	char* datos[] = {"f","z","d","a"};
 	print_test("Prueba crear abb vacio", abb);
     print_test("Prueba la cantidad de nodos en el abb es igual a 0", abb_cantidad(abb) == 0);
-	print_test("Prueba guardar un nodo de raiz",abb_guardar(abb,clave,dato) == true);
+
+    // Prueba guardar el primer elemento
+	print_test("Prueba guardar un nodo de raiz",abb_guardar(abb,claves[0],datos[0]) == true);
 	print_test("Prueba la cantidad de nodos en el abb es igual a 1", abb_cantidad(abb) == 1);
-	print_test("Prueba abb obtener devuelve a",abb_obtener(abb,clave) == dato);
-	print_test("Prueba abb pertenece devuelve true con clave a", abb_pertenece(abb,clave) == true);
-	print_test("Prueba abb pertenese devuelve false con clave b", abb_pertenece(abb,"b") == false);
+	print_test("Prueba abb obtener devuelve f",abb_obtener(abb,claves[0]) == datos[0]);
+	print_test("Prueba abb pertenece devuelve true con clave f", abb_pertenece(abb,claves[0]) == true);
+
+	// Prueba guardar un segundo elemento el cual es mayor, hijo derecho
+	print_test("Prueba abb pertenee devuelve false con clave z", abb_pertenece(abb,claves[1]) == false);
+	print_test("Prueba guardar un nodo con clave z", abb_guardar(abb,claves[1],datos[1]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba abb obtener de clave z devuelve z", abb_obtener(abb,claves[1]) == datos[1]);
+	print_test("Prueba abb pertence devuelve true con clave z", abb_pertenece(abb,claves[1]) == true);
+
+	//	Prueba guardar un tercer elemento el cual es menor, hijo izquierdo
+	print_test("Prueba guardar un nodo con clave d", abb_guardar(abb,claves[2],datos[2]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 3", abb_cantidad(abb) == 3);
+	print_test("Prueba abb obtener de clave d devuelve d", abb_obtener(abb,claves[2]) == datos[2]);
+	print_test("Prueba abb pertence devuelve true con clave d", abb_pertenece(abb,claves[2]) == true);
+
+	print_test("Prueba guardar un nodo con clave a", abb_guardar(abb,claves[3],datos[3]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 4", abb_cantidad(abb) == 4);
+	print_test("Prueba abb obtener de clave a devuelve a", abb_obtener(abb,claves[3]) == datos[3]);
+	print_test("Prueba abb pertence devuelve true con clave a", abb_pertenece(abb,claves[3]) == true);
+
 }
 
 /* ******************************************************************
