@@ -30,7 +30,6 @@ struct abb {
  *                    FUNCIONES AUXILIARES						   *
  * *****************************************************************/
 
-
 char *strdup (const char *str) {
     char *copia = malloc (strlen (str) + 1);   
     if (copia == NULL) return NULL;          
@@ -52,7 +51,7 @@ bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave, void *
 
 // Busca un nodo en un arbol segun la clave, en caso de existir devuelve el nodo y en caso contrario devuelve null.
 nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
-	if (!nodo) return NULL;
+	if (nodo == NULL) return NULL;
 	if (arbol->comparar(nodo->clave,clave) == 0){
 		return nodo;
 	}
@@ -71,7 +70,7 @@ nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
 
 abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 	abb_t* abb = malloc(sizeof(abb_t));
-	if(!abb) return NULL;
+	if(abb == NULL) return NULL;
 	abb->comparar = cmp;
 	abb->destructor = destruir_dato;
 	abb->cantidad = 0;
@@ -83,7 +82,7 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	//Creo un nodo
 	if(!arbol->nodo){
 		nodo_t* nodo = malloc(sizeof(nodo_t));
-		if(!nodo) return false;
+		if(nodo == NULL) return false;
 		nodo->clave =  strdup(clave);
 		nodo->dato = dato;
 		nodo->izq = NULL;
@@ -98,28 +97,33 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	return true; // Para que compile
 }
 
-size_t abb_cantidad(abb_t *arbol){
-	return arbol->cantidad;
-}
-
 void *abb_borrar(abb_t *arbol, const char *clave){
 	return	NULL;
 }
 
+size_t abb_cantidad(abb_t *arbol){
+	return arbol->cantidad;
+}
+
 void *abb_obtener(const abb_t *arbol, const char *clave){
-	if (!arbol->nodo) return NULL;
+	if (arbol->nodo == NULL) return NULL;
 	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave);
-	if (!nodo) return NULL;
+	if (nodo == NULL) return NULL;
 	return nodo->dato;
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
-	if (!arbol->nodo) return NULL;
+	if (arbol->nodo == NULL) return NULL;
 	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave);
-	if (!nodo) return true; // Si la la clave no existe en el arbol entonces el nodo sera NULL.
+	if (nodo != NULL) return true; // Si la la clave no existe en el arbol entonces el nodo sera NULL.
 	return false;
 }
 
 void abb_destruir(abb_t *arbol){
-	return;
+		if (arbol->nodo == NULL) free(arbol);
+		if (arbol->nodo->izq && !arbol->nodo->der){
+			free(arbol->nodo);
+			return;
+		}
+		return (abb_destruir(arbol));
 }
