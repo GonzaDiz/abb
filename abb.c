@@ -37,19 +37,16 @@ char *strdup (const char *str) {
     return copia;                            
 }
 
-bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave, void *dato){
+bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave){
 	if(arbol->comparar(arbol->nodo->clave,clave) < 0){
-		abb_guardar_recursivo(arbol,arbol->nodo->izq,clave,dato);
+		abb_guardar_recursivo(arbol,arbol->nodo->izq,clave);
 	}
 	else if (arbol->comparar(arbol->nodo->clave,clave) > 0){
-		abb_guardar_recursivo(arbol,arbol->nodo->der,clave,dato);	
+		abb_guardar_recursivo(arbol,arbol->nodo->der,clave);	
 	}
 	else if (arbol->comparar(arbol->nodo->clave,clave) == 0){
-		if (arbol->destructor) destructor(arbol->nodo->dato);
-		nodo->dato = dato;
-		nodo->izq = 
-		nodo->der = 
-		arbol->cantidad++;
+		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+		nodo->dato = nodo->dato;
 		return true;
 	}
 
@@ -86,20 +83,19 @@ abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 }
 
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
+	
+	if (arbol == NULL) return false;
 	//Creo un nodo
-	if(!arbol->nodo){
-		nodo_t* nodo = malloc(sizeof(nodo_t));
-		if(nodo == NULL) return false;
-		nodo->clave =  strdup(clave);
-		nodo->dato = dato;
-		nodo->izq = NULL;
-		nodo->der = NULL;
-		//arbol->nodo = nodo;
-		//arbol->cantidad++;
-		return true;
-	}
-
-	if (abb_guardar_recursivo(arbol,arbol->nodo,clave,dato)) return true;
+	nodo_t* nodo = malloc(sizeof(nodo_t));
+	if(nodo == NULL) return false;
+	nodo->clave =  strdup(clave);
+	nodo->dato = dato;
+	nodo->izq = NULL;
+	nodo->der = NULL;
+	//arbol->nodo = nodo;
+	//arbol->cantidad++;
+		
+	if (abb_guardar_recursivo(arbol,arbol->nodo,clave)) return true;
 
 	return true; // Para que compile
 }
