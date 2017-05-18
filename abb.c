@@ -38,7 +38,6 @@ char *strdup (const char *str) {
 }
 
 bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const char *clave){
-	printf("LLEGA ACA\n");
 
 	// Si el arbol recien esta creado entcones el primer nodo/raiz es Null
 	if (arbol->nodo == NULL ) {
@@ -46,16 +45,23 @@ bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const c
 		arbol->cantidad++;
 		return true;
 	}
-	else if(arbol->comparar(arbol->nodo->clave,clave) < 0){
-		printf("LLEGA ACA\n");
-		abb_guardar_recursivo(arbol,nodo->izq,nuevoNodo,clave);
+	else if(arbol->comparar(nodo->clave,clave) < 0){
+		if (nodo->der == NULL){
+			nodo->der = nuevoNodo;
+			arbol->cantidad++;
+		return true;
+		}
+		return abb_guardar_recursivo(arbol,nodo->der,nuevoNodo,clave);
 	}
-	else if (arbol->comparar(arbol->nodo->clave,clave) > 0){
-		printf("LLEGA ACA\n");
-		abb_guardar_recursivo(arbol,nodo->der,nuevoNodo,clave);	
+	else if (arbol->comparar(nodo->clave,clave) > 0){
+		if (nodo->izq == NULL){
+			nodo->izq = nuevoNodo;
+			arbol->cantidad++;
+			return true;
+		}
+		return abb_guardar_recursivo(arbol,nodo->izq,nuevoNodo,clave);	
 	}
-	else if (arbol->comparar(arbol->nodo->clave,clave) == 0){
-		printf("LLEGA ACA\n");
+	else if (arbol->comparar(nodo->clave,clave) == 0){
 		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
 		nodo->dato = nuevoNodo->dato;
 		free(nodo->clave);
@@ -68,16 +74,19 @@ bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const c
 
 // Busca un nodo en un arbol segun la clave, en caso de existir devuelve el nodo y en caso contrario devuelve null.
 nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
-	if (nodo == NULL) return NULL;
+	if (nodo == NULL){
+		return NULL;
+	} 
 	if (arbol->comparar(nodo->clave,clave) == 0){
 		return nodo;
 	}
-	else if (arbol->comparar(nodo->clave,clave) > 0){
+	else if (arbol->comparar(nodo->clave,clave) > 0){ 
 		return buscar_nodo(nodo->izq,arbol,clave);
 	}
 	else if (arbol->comparar(nodo->clave,clave) <0){
-		buscar_nodo(nodo->der,arbol,clave);
+		return buscar_nodo(nodo->der,arbol,clave);
 	}
+
 	return NULL; //SI EL NODO NO EXISTE EN EL ARBOL DEVUELVE NULL
 }
 
@@ -108,7 +117,6 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	//arbol->nodo = nodo;
 	//arbol->cantidad++;
 
-	printf("LLEGA ACA\n");
 		
 	if (abb_guardar_recursivo(arbol,arbol->nodo,nodo,clave)) return true;
 
