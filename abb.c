@@ -46,7 +46,14 @@ bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave){
 	}
 	else if (arbol->comparar(arbol->nodo->clave,clave) == 0){
 		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+<<<<<<< HEAD
 		nodo->dato = nodo->dato;
+=======
+		nodo->dato = dato;
+		// nodo->izq = // comente para que compile
+		// nodo->der = // comente para que compile
+		arbol->cantidad++;
+>>>>>>> 7022435ba5f590bfa61c6a8368998363b4e8ce5c
 		return true;
 	}
 
@@ -123,10 +130,31 @@ bool abb_pertenece(const abb_t *arbol, const char *clave){
 }
 
 void abb_destruir(abb_t *arbol){
-		if (arbol->nodo == NULL) free(arbol);
-		if (arbol->nodo->izq && !arbol->nodo->der){
+		if (arbol->nodo == NULL){
+		free(arbol); 
+		return;
+		} 		
+		if (!arbol->nodo->izq && !arbol->nodo->der){
 			free(arbol->nodo);
 			return;
 		}
-		return (abb_destruir(arbol));
+		// buscar forma de iterar el arbol recursivamente sin usar un wrapper
+		// (esto no deberia andar)
+		if(arbol->nodo->izq) arbol->nodo = arbol->nodo->izq;
+		abb_destruir(arbol);
+		if(arbol->nodo->der) arbol->nodo = arbol->nodo->der;		
+		abb_destruir(arbol);
+}
+
+/* *****************************************************************
+ *                       ITERADOR INTERNO 						   *
+ * *****************************************************************/
+
+void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
+	if (!arbol->nodo) return;
+	if(arbol->nodo->izq) arbol->nodo = arbol->nodo->izq;
+	abb_in_order(arbol,visitar,extra);
+	// hacer algo
+	if(arbol->nodo->der) arbol->nodo = arbol->nodo->der;
+	abb_in_order(arbol,visitar,extra);
 }
