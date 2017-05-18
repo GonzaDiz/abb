@@ -53,7 +53,6 @@ bool abb_guardar_recursivo(abb_t *arbol, nodo_t* nodo, const char *clave, void *
 // Busca un nodo en un arbol segun la clave, en caso de existir devuelve el nodo y en caso contrario devuelve null.
 nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
 	if (!nodo) return NULL;
-
 	if (arbol->comparar(nodo->clave,clave) == 0){
 		return nodo;
 	}
@@ -63,7 +62,6 @@ nodo_t* buscar_nodo(nodo_t* nodo,const abb_t* arbol, const char *clave){
 	else if (arbol->comparar(nodo->clave,clave) <0){
 		buscar_nodo(nodo->der,arbol,clave);
 	}
-
 	return NULL; //SI EL NODO NO EXISTE EN EL ARBOL DEVUELVE NULL
 }
 
@@ -116,6 +114,9 @@ void *abb_obtener(const abb_t *arbol, const char *clave){
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
+	if (!arbol->nodo) return NULL;
+	nodo_t* nodo = buscar_nodo(arbol->nodo,arbol,clave);
+	if (!nodo) return true; // Si la la clave no existe en el arbol entonces el nodo sera NULL.
 	return false;
 }
 
