@@ -16,7 +16,7 @@
 /* ******************************************************************
  *                        PRUEBAS UNITARIAS
  * *****************************************************************/
-/*static void prueba_crear_abb_vacio(){
+static void prueba_crear_abb_vacio(){
 	printf("---------------------------PRUEBAS CREAR ABB VACIO---------------------------\n");
     abb_t* abb = abb_crear(strcmp,NULL);
     char* str = "test";
@@ -93,7 +93,7 @@ static void pruebas_abb_borrar_hojas(){
 
 	abb_destruir(abb);
 	print_test("El arbol se destruyo correctamente",true);
-}*/
+}
 
 static void pruebas_abb_borrar_nodo_con_un_hijo(){
 	printf("-------------------PRUEBAS ABB BORRAR UN HIJO---------------------------\n");
@@ -114,8 +114,8 @@ static void pruebas_abb_borrar_nodo_con_un_hijo(){
 	print_test("Prueba cantidad es igual a 3", abb_cantidad(abb) == 3);
 	print_test("Prueba borrar hoja z", abb_borrar(abb,claves[4]) == datos[4]);
 	print_test("Prueba z no pertenece al arbol", abb_pertenece(abb,claves[4]) == false);
-	/*print_test("Prueba borrar raiz f", abb_borrar(abb,claves[0]) == datos[0]);
-	print_test("Prueba cantidad es igual a 1", abb_cantidad(abb) == 1);*/
+	print_test("Prueba borrar raiz f", abb_borrar(abb,claves[0]) == datos[0]);
+	print_test("Prueba cantidad es igual a 1", abb_cantidad(abb) == 1);
 	abb_destruir(abb);
 	print_test("El arbol se destruyo correctamente",true);
 
@@ -129,8 +129,8 @@ static void pruebas_abb_borrar_nodo_con_un_hijo(){
 void pruebas_abb_alumno()
 {
     /* Ejecuta todas las pruebas unitarias. */
-	/*prueba_crear_abb_vacio();
+	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
-	pruebas_abb_borrar_hojas();*/
+	pruebas_abb_borrar_hojas();
 	pruebas_abb_borrar_nodo_con_un_hijo();
 }
