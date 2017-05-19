@@ -120,18 +120,24 @@ void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const 
 			return dato;
 		}
 		// caso2: borrar un nodo con solamente un hijo
-		if(nodo->izq == NULL || nodo->der == NULL){
-			bool es_raiz = false;
-			nodo_t* nodoAux;
+		if((nodo->izq == NULL && nodo->der != NULL) || (nodo->der == NULL && nodo->izq !=NULL)){
 			if(!nodoAnterior){ 
-				nodoAux = malloc(sizeof(nodo_t));
-				nodoAnterior = nodoAux;
-				es_raiz = true;
+				if (nodo->izq != NULL){
+					arbol->nodo = nodo->izq;
+				}
+				else arbol->nodo = nodo->der;
+				void* dato = liberar_nodo(nodo,arbol);
+				return dato;
 			}
-			if(nodo->izq == NULL) nodoAnterior->der = nodo->der;
-			else nodoAnterior->izq = nodo->izq;
+			if (arbol->comparar(nodoAnterior->clave,clave) < 0){
+				if (nodo->izq == NULL) nodoAnterior->der = nodo->der;
+				else nodoAnterior->der = nodo->izq;
+			}
+			else {
+				if(nodo->izq == NULL) nodoAnterior->izq = nodo->der;
+				else nodoAnterior->izq = nodo->izq;
+			}
 			void* dato = liberar_nodo(nodo,arbol);
-			if(es_raiz)arbol->nodo = nodoAnterior;
 			return dato; 			
 		}
 	}
