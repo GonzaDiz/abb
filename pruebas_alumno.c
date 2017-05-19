@@ -65,7 +65,7 @@ static void pruebas_abb_guardar(){
 
 }
 
-static void pruebas_abb_borrar(){
+static void pruebas_abb_borrar_hojas(){
 	printf("---------------------------PRUEBAS ABB BORRAR---------------------------\n");
 	abb_t* abb = abb_crear(strcmp,NULL);
 	char* claves[] = {"f","z","d","a"};
@@ -81,6 +81,11 @@ static void pruebas_abb_borrar(){
 	print_test("Prueba cantidad es igual a 3", abb_cantidad(abb) == 3);
 	print_test("Prueba borrar hoja z", abb_borrar(abb,claves[1]) == claves[1]);
 	print_test("Prueba cantidad es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba borrar hoja d", abb_borrar(abb,claves[2]) == claves[2]);
+	print_test("Prueba cantidad es igual a 1", abb_cantidad(abb) == 1);
+
+	print_test("Prueba borrar raiz/hoja f", abb_borrar(abb,claves[0]) == claves[0]);
+	print_test("Prueba cantidad es igual a 0", abb_cantidad(abb) == 0);
 
 	abb_destruir(abb);
 	print_test("El arbol se destruyo correctamente",true);
@@ -96,5 +101,5 @@ void pruebas_abb_alumno()
     /* Ejecuta todas las pruebas unitarias. */
 	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
-	pruebas_abb_borrar();
+	pruebas_abb_borrar_hojas();
 }

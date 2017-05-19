@@ -96,15 +96,18 @@ bool es_hoja(nodo_t* nodo){
 
 void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior, abb_t* arbol,const char *clave){
 	//Si entro en esta funcion entonces es por que la clave si esta en el arbol.
+
 	if (es_hoja(nodo) && (arbol->comparar(nodo->clave,clave) == 0)){
-		if (nodoAnterior->izq == nodo){
+
+		if (nodoAnterior != NULL && nodoAnterior->izq == nodo){
 			nodoAnterior->izq = NULL;
 		}
-		else nodoAnterior->der = NULL;
+		else if (nodoAnterior != NULL) nodoAnterior->der = NULL;
 		arbol->cantidad--;
 		void* dato = nodo->dato;
 		free(nodo->clave);
 		free(nodo);
+		if (nodoAnterior == NULL) arbol->nodo = NULL;
 		return dato;
 	}
 	else if (arbol->comparar(nodo->clave,clave) > 0){ 
