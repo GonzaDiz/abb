@@ -94,17 +94,17 @@ bool es_hoja(nodo_t* nodo){
 	return false;
 }
 
-void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior, abb_t* arbol,const char *clave){
+void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const char *clave){
 	//Si entro en esta funcion entonces es por que la clave si esta en el arbol.
 
 	if (es_hoja(nodo) && (arbol->comparar(nodo->clave,clave) == 0)){
-
 		if (nodoAnterior != NULL && nodoAnterior->izq == nodo){
 			nodoAnterior->izq = NULL;
 		}
 		else if (nodoAnterior != NULL) nodoAnterior->der = NULL;
-		arbol->cantidad--;
 		void* dato = nodo->dato;
+		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+		arbol->cantidad--;
 		free(nodo->clave);
 		free(nodo);
 		if (nodoAnterior == NULL) arbol->nodo = NULL;
@@ -119,10 +119,11 @@ void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior, abb_t* arbol,const
 	return NULL;
 }
 
-void abb_destruir_recursivo(nodo_t* nodo){
+void abb_destruir_recursivo(nodo_t* nodo,abb_t* arbol){
 	if (nodo == NULL) return;
-	abb_destruir_recursivo(nodo->der);
-	abb_destruir_recursivo(nodo->izq);
+	abb_destruir_recursivo(nodo->der,arbol);
+	abb_destruir_recursivo(nodo->izq,arbol);
+	if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
 	free(nodo->clave);
 	free(nodo);
 }
@@ -182,7 +183,7 @@ void abb_destruir(abb_t *arbol){
 		free(arbol);
 		return;
 	}
-	abb_destruir_recursivo(arbol->nodo);
+	abb_destruir_recursivo(arbol->nodo,arbol);
 	free(arbol);
 }
 
