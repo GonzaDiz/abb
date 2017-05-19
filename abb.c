@@ -89,6 +89,33 @@ nodo_t* abb_buscar_recursivo(nodo_t* nodo,const abb_t* arbol, const char *clave)
 	return NULL; //SI EL NODO NO EXISTE EN EL ARBOL DEVUELVE NULL
 }
 
+bool es_hoja(nodo_t* nodo){
+	if (nodo->izq == NULL && nodo->der == NULL) return true;
+	return false;
+}
+
+void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior, abb_t* arbol,const char *clave){
+	//Si entro en esta funcion entonces es por que la clave si esta en el arbol.
+	if (es_hoja(nodo) && (arbol->comparar(nodo->clave,clave) == 0)){
+		if (nodoAnterior->izq == nodo){
+			nodoAnterior->izq = NULL;
+		}
+		else nodoAnterior->der = NULL;
+		arbol->cantidad--;
+		void* dato = nodo->dato;
+		free(nodo->clave);
+		free(nodo);
+		return dato;
+	}
+	else if (arbol->comparar(nodo->clave,clave) > 0){ 
+		return abb_borrar_recursivo(nodo->izq,nodo,arbol,clave);
+	}
+	else if (arbol->comparar(nodo->clave,clave) <0){
+		return abb_borrar_recursivo(nodo->der,nodo,arbol,clave);
+	}
+	return NULL;
+}
+
 void abb_destruir_recursivo(nodo_t* nodo){
 	if (nodo == NULL) return;
 	abb_destruir_recursivo(nodo->der);
@@ -125,7 +152,8 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 }
 
 void *abb_borrar(abb_t *arbol, const char *clave){
-	return	NULL;
+	if (!abb_pertenece(arbol,clave)) return NULL;
+	return abb_borrar_recursivo(arbol->nodo,NULL,arbol,clave);
 }
 
 size_t abb_cantidad(abb_t *arbol){
