@@ -98,10 +98,10 @@ void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const 
 	//Si entro en esta funcion entonces es por que la clave si esta en el arbol.
 
 	if (es_hoja(nodo) && (arbol->comparar(nodo->clave,clave) == 0)){
-		if (nodoAnterior != NULL && nodoAnterior->izq == nodo){
-			nodoAnterior->izq = NULL;
+		if (nodoAnterior){
+		if (nodoAnterior->izq == nodo) nodoAnterior->izq = NULL;
+		else nodoAnterior->der = NULL;
 		}
-		else if (nodoAnterior != NULL) nodoAnterior->der = NULL;
 		void* dato = nodo->dato;
 		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
 		arbol->cantidad--;
@@ -151,8 +151,7 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	nodo->dato = dato;
 	nodo->izq = NULL;
 	nodo->der = NULL;		
-	if (abb_guardar_recursivo(arbol,arbol->nodo,nodo,clave)) return true;
-	return false;
+	return abb_guardar_recursivo(arbol,arbol->nodo,nodo,clave);
 }
 
 void *abb_borrar(abb_t *arbol, const char *clave){
@@ -165,24 +164,27 @@ size_t abb_cantidad(abb_t *arbol){
 }
 
 void *abb_obtener(const abb_t *arbol, const char *clave){
-	if (arbol->nodo == NULL) return NULL;
+	// esto se valida en la primer linea de abb buscar
+	// if (arbol->nodo == NULL) return NULL;
 	nodo_t* nodo = abb_buscar_recursivo(arbol->nodo,arbol,clave); //busco nodo segun clave
 	if (nodo == NULL) return NULL;
 	return nodo->dato;
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
-	if (arbol->nodo == NULL) return NULL;
+	//esto se valida en la primer linea de abb buscar
+	// if (arbol->nodo == NULL) return NULL;
 	nodo_t* nodo = abb_buscar_recursivo(arbol->nodo,arbol,clave); //busco nodo segun clave
 	if (nodo != NULL) return true; // Si la la clave no existe en el arbol entonces el nodo sera NULL.
 	return false;
 }
 
 void abb_destruir(abb_t *arbol){
-	if (arbol->nodo == NULL){
-		free(arbol);
-		return;
-	}
+	// esta ya se valida en la primer linea de abb_destruir_recursivo!
+	// if (arbol->nodo == NULL){
+	// 	free(arbol);
+	// 	return;
+	// }
 	abb_destruir_recursivo(arbol->nodo,arbol);
 	free(arbol);
 }

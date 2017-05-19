@@ -36,7 +36,7 @@ static void pruebas_abb_guardar(){
 	print_test("Prueba crear abb vacio", abb);
     print_test("Prueba la cantidad de nodos en el abb es igual a 0", abb_cantidad(abb) == 0);
 
-    // Prueba guardar el primer elemento
+  // Prueba guardar el primer elemento
 	print_test("Prueba guardar un nodo de raiz",abb_guardar(abb,claves[0],datos[0]) == true);
 	print_test("Prueba la cantidad de nodos en el abb es igual a 1", abb_cantidad(abb) == 1);
 	print_test("Prueba abb obtener devuelve f",abb_obtener(abb,claves[0]) == datos[0]);
