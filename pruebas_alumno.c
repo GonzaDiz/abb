@@ -65,6 +65,27 @@ static void pruebas_abb_guardar(){
 
 }
 
+static void pruebas_abb_borrar(){
+	printf("---------------------------PRUEBAS ABB BORRAR---------------------------\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+	char* claves[] = {"f","z","d","a"};
+	char* datos[] = {"f","z","d","a"};
+	print_test("Guardar clave f en el abb",abb_guardar(abb,claves[0],datos[0]) == true);
+	print_test("Guardar clave z en el abb",abb_guardar(abb,claves[1],datos[1]) == true);
+	print_test("Guardar clave d en el abb",abb_guardar(abb,claves[2],datos[2]) == true);
+	print_test("Guardar clave a en el abb",abb_guardar(abb,claves[3],datos[3]) == true);
+	print_test("Prueba cantidad es igual a 4", abb_cantidad(abb) == 4);
+	print_test("Intento borrar una clave que no existe es NULL", abb_borrar(abb,"i") == NULL);
+	print_test("Prueba cantidad es igual a 4", abb_cantidad(abb) == 4);
+	print_test("Prueba borrar hoja a", abb_borrar(abb,claves[3]) == claves[3]);
+	print_test("Prueba cantidad es igual a 3", abb_cantidad(abb) == 3);
+	print_test("Prueba borrar hoja z", abb_borrar(abb,claves[1]) == claves[1]);
+	print_test("Prueba cantidad es igual a 2", abb_cantidad(abb) == 2);
+
+	abb_destruir(abb);
+	print_test("El arbol se destruyo correctamente",true);
+}
+
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
  * *****************************************************************/
@@ -75,4 +96,5 @@ void pruebas_abb_alumno()
     /* Ejecuta todas las pruebas unitarias. */
 	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
+	pruebas_abb_borrar();
 }
