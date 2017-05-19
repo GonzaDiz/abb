@@ -91,6 +91,28 @@ static void pruebas_abb_borrar_hojas(){
 	print_test("El arbol se destruyo correctamente",true);
 }
 
+static void pruebas_abb_borrar_nodo_con_un_hijo(){
+	printf("-------------------PRUEBAS ABB BORRAR UN HIJO---------------------------\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+	char* claves[] = {"a","b","c","d"};
+	char* datos[] = {"f","z","d","a"};
+	print_test("Guardar clave p en el abb",abb_guardar(abb,claves[0],datos[0]) == true);
+	print_test("Guardar clave k en el abb",abb_guardar(abb,claves[1],datos[1]) == true);
+	print_test("Guardar clave m en el abb",abb_guardar(abb,claves[2],datos[2]) == true);
+	print_test("Guardar clave l en el abb",abb_guardar(abb,claves[3],datos[3]) == true);
+	print_test("Prueba cantidad es igual a 4", abb_cantidad(abb) == 4);
+	print_test("Intento borrar una clave que no existe es NULL", abb_borrar(abb,"i") == NULL);
+	print_test("Prueba borrar nodo con un hijo y devuelve c", abb_borrar(abb,claves[2]) == datos[2]);
+	print_test("Prueba cantidad es igual a 3", abb_cantidad(abb) == 3);
+	print_test("Prueba borrar nodo con un hijo b", abb_borrar(abb,claves[1]) == datos[1]);
+	print_test("Prueba cantidad es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba borrar raiz a", abb_borrar(abb,claves[0]) == datos[0]);
+	print_test("Prueba cantidad es igual a 1", abb_cantidad(abb) == 1);
+	abb_destruir(abb);
+	print_test("El arbol se destruyo correctamente",true);
+
+}
+
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
  * *****************************************************************/
@@ -102,4 +124,5 @@ void pruebas_abb_alumno()
 	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
 	pruebas_abb_borrar_hojas();
+	pruebas_abb_borrar_nodo_con_un_hijo();
 }

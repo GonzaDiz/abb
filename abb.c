@@ -94,22 +94,52 @@ bool es_hoja(nodo_t* nodo){
 	return false;
 }
 
+void* liberar_nodo(nodo_t* nodo,abb_t* arbol){
+	void* dato = nodo->dato;
+	if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+	arbol->cantidad--;
+	free(nodo->clave);
+	free(nodo);
+	return dato;
+}
+
+
 void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const char *clave){
+	//PRE: La clave esta en el arbol
 	//Si entro en esta funcion entonces es por que la clave si esta en el arbol.
 
-	if (es_hoja(nodo) && (arbol->comparar(nodo->clave,clave) == 0)){
-		if (nodoAnterior){
-		if (nodoAnterior->izq == nodo) nodoAnterior->izq = NULL;
-		else nodoAnterior->der = NULL;
+	if(arbol->comparar(nodo->clave,clave) == 0){
+		// caso1: borrar una hoja (nodo que no tiene hijos)
+		if (es_hoja(nodo)){
+			if (nodoAnterior){
+				if (nodoAnterior->izq == nodo) nodoAnterior->izq = NULL;
+				else nodoAnterior->der = NULL;
+			}
+			void* dato = liberar_nodo(nodo,arbol);
+			if (nodoAnterior == NULL) arbol->nodo = NULL;
+			return dato;
 		}
-		void* dato = nodo->dato;
-		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
-		arbol->cantidad--;
-		free(nodo->clave);
-		free(nodo);
-		if (nodoAnterior == NULL) arbol->nodo = NULL;
-		return dato;
+		// caso2: borrar un nodo con solamente un hijo
+		if(nodo->izq == NULL || nodo->der == NULL){
+			bool es_raiz = false;
+			nodo_t* nodoAux;
+			if(!nodoAnterior){ 
+				nodoAux = malloc(sizeof(nodo_t));
+				nodoAnterior = nodoAux;
+				es_raiz = true;
+			}
+			if(nodo->izq == NULL) nodoAnterior->der = nodo->der;
+			else nodoAnterior->izq = nodo->izq;
+			void* dato = liberar_nodo(nodo,arbol);
+			if(es_raiz)arbol->nodo = nodoAnterior;
+			return dato; 			
+		}
 	}
+	// caso3: borrar un nodo con 2 hijos
+
+
+
+
 	else if (arbol->comparar(nodo->clave,clave) > 0){ 
 		return abb_borrar_recursivo(nodo->izq,nodo,arbol,clave);
 	}
