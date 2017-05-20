@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 
 /* ******************************************************************
@@ -121,6 +122,54 @@ static void pruebas_abb_borrar_nodo_con_un_hijo(){
 
 }
 
+static void pruebas_abb_borrar_nodo_con_dos_hijos(){
+printf("-------------------PRUEBAS ABB BORRAR NODO CON DOS HIJOS------------------------\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+	char* claves[] = {"40","30","50","15","35","60","10","20","38"};
+	char* datos[] = {"40","30","50","15","35","60","10","20","38"};
+	
+	bool ok = true;
+	for (int i = 0; i<9; i++){
+		ok = abb_guardar(abb,claves[i],datos[i]);
+		if (!ok) break;
+	}
+	print_test("Prueba almacenar elementos", ok);
+	print_test("Prueba cantidad es igual a 9", abb_cantidad(abb) == 9);
+	print_test("Prueba borrar nodo 30 con dos hijos", abb_borrar(abb,claves[1]) == datos[1]);
+	print_test("Prueba cantidad es igual a 8", abb_cantidad(abb) == 8);
+	print_test("Pruebo que el nodo 30 ya no existe", abb_pertenece(abb,claves[1]) == false);
+	print_test("Prueba borrar nodo 35 con dos hijos", abb_borrar(abb,claves[4]) == datos[4]);
+	print_test("Prueba cantidad es igual a 7", abb_cantidad(abb) == 7);
+	print_test("Pruebo que el nodo 35 ya no pertenece", abb_pertenece(abb,claves[4]) == false);
+	print_test("Pruebo borrar nodo 15 con dos hijos", abb_borrar(abb,claves[3]) == datos[3]);
+	print_test("Prueba cantidad es igual a 6",abb_cantidad(abb) == 6);
+	print_test("Pruebo que 15 ya no pertenece", abb_pertenece(abb,claves[3]) == false);
+	abb_destruir(abb);
+	print_test("El arbol se destruyo correctamente",true);
+}
+
+static void pruebas_abb_volumen(size_t largo){
+	printf("-------------------PRUEBAS ABB VOLUMEN ------------------------\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+
+	const size_t largo_clave = 10;
+	char (*claves)[largo_clave] = malloc (largo * largo_clave);
+	char (*datos)[largo_clave] = malloc (largo * largo_clave);
+
+	srand(time(NULL));
+	bool ok = true;
+	for (unsigned i = 0;i <largo;i++){
+		sprintf(claves[i], "%08d",(rand() % i));
+		sprintf(datos[i], "%08d",(rand () %i));
+		ok = abb_guardar(abb,claves[i],datos[i]);
+		if (!ok) break;
+	}
+
+	print_test("Prueba abb guardar muchos elementos", ok);
+	print_test("Prueba la cantidad de elementos es correcta", abb_cantidad(abb) == largo);
+
+}
+
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
  * *****************************************************************/
@@ -133,4 +182,6 @@ void pruebas_abb_alumno()
 	pruebas_abb_guardar();
 	pruebas_abb_borrar_hojas();
 	pruebas_abb_borrar_nodo_con_un_hijo();
+	pruebas_abb_borrar_nodo_con_dos_hijos();
+	pruebas_abb_volumen(50000);
 }
