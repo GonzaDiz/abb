@@ -103,6 +103,11 @@ void* liberar_nodo(nodo_t* nodo,abb_t* arbol){
 	return dato;
 }
 
+void* buscar_minimo(nodo_t* nodo){
+	if (nodo->izq == NULL) return nodo;
+	return buscar_minimo(nodo->izq);
+}
+
 
 void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const char *clave){
 	//PRE: La clave esta en el arbol
@@ -120,7 +125,7 @@ void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const 
 			return dato;
 		}
 		// caso2: borrar un nodo con solamente un hijo
-		if((nodo->izq == NULL && nodo->der != NULL) || (nodo->der == NULL && nodo->izq !=NULL)){
+		else if((nodo->izq == NULL && nodo->der != NULL) || (nodo->der == NULL && nodo->izq !=NULL)){
 			if(!nodoAnterior){ 
 				if (nodo->izq != NULL){
 					arbol->nodo = nodo->izq;
@@ -140,12 +145,19 @@ void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const 
 			void* dato = liberar_nodo(nodo,arbol);
 			return dato; 			
 		}
+		// caso3: borrar un nodo con 2 hijos
+		else {
+			nodo_t* nodoMinimo = buscar_minimo(nodo->der); // devuelve el 
+			// entonces quiero hacer un swap entre nodoMinimo y nodo
+			void* dato = nodo->dato;
+			char* claveAux = strdup(nodoMinimo->clave);
+			void* datoAux = abb_borrar(arbol,claveAux);
+			free(nodo->clave);
+			nodo->clave = claveAux;
+			nodo->dato = datoAux;
+			return dato;
+		}
 	}
-	// caso3: borrar un nodo con 2 hijos
-
-
-
-
 	else if (arbol->comparar(nodo->clave,clave) > 0){ 
 		return abb_borrar_recursivo(nodo->izq,nodo,arbol,clave);
 	}
