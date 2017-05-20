@@ -12,7 +12,7 @@
 struct abb;  // Definición completa en abb.c.
 typedef struct abb abb_t;
 typedef struct nodo nodo_t;
-
+typedef struct abb_iter abb_iter_t; // iterador externo
 
 /* *****************************************************************
  *                    PRIMITIVAS DEL ABB
@@ -63,6 +63,31 @@ void abb_destruir(abb_t *arbol);
 // PRE: el abb fue creado
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra);
 
+/* *****************************************************************
+ *               PRIMITIVAS DEL ITERADOR EXTERNO
+ * *****************************************************************/
+
+// crear un iterador externo
+// PRE: se creo el arbol
+// POST: se creo un iterador para el arbol 
+abb_iter_t *abb_iter_in_crear(const abb_t *arbol);
+
+// devuelve true si el iterador tiene que avanzar, false si no
+// PRE: el iterador fue creado
+bool abb_iter_in_avanzar(abb_iter_t *iter);
+
+// ve el dato guardado en el nodo actual
+// PRE: el iterador fue creado
+const char *abb_iter_in_ver_actual(const abb_iter_t *iter);
+
+// ve si el iterador llego al final del abb
+// PRE: el iterador fue creado
+bool abb_iter_in_al_final(const abb_iter_t *iter);
+
+// destruye el iterador
+// PRE: el iterador fue creado
+// POST: el iterador se destruyo
+void abb_iter_in_destruir(abb_iter_t* iter);
 
 
 /* *****************************************************************
