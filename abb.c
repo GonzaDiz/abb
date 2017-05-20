@@ -63,9 +63,12 @@ bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const c
 	}
 	else if (arbol->comparar(nodo->clave,clave) == 0){
 		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
-		nodo->dato = nuevoNodo->dato;
-		free(nodo->clave);
-		free(nodo);
+		void* dato = nuevoNodo->dato;
+		nodo->dato = dato;
+		//free(nodo->clave);
+		//free(nodo);
+		free(nuevoNodo->clave);
+		free(nuevoNodo);
 		return true;
 	}
 	return false;
@@ -107,7 +110,6 @@ void* buscar_minimo(nodo_t* nodo){
 	if (nodo->izq == NULL) return nodo;
 	return buscar_minimo(nodo->izq);
 }
-
 
 void* abb_borrar_recursivo(nodo_t* nodo,nodo_t* nodoAnterior,abb_t* arbol,const char *clave){
 	//PRE: La clave esta en el arbol
