@@ -233,6 +233,30 @@ static void pruebas_abb_volumen(size_t largo){
 	free(datos);
 }
 
+
+bool buscar_dato(const char* clave, void* datos, void* extra){
+  if(datos == extra) return false;
+  return true;
+ }
+
+static void pruebas_abb_iterador_interno(){
+printf("-------------------PRUEBAS ABB ITERARDOR INTERNO-----------------------\n");
+  abb_t* abb = abb_crear(strcmp,NULL);
+  char* claves[] = {"40","30","50","15","35","60","10","20","38"};
+  char* datos[] = {"40","30","50","15","35","60","10","20","38"};
+  
+  bool ok = true;
+  for (int i = 0; i<9; i++){
+    ok = abb_guardar(abb,claves[i],datos[i]);
+    if (!ok) break;
+  }
+  print_test("Prueba almacenar elementos", ok);
+  abb_in_order(abb,buscar_dato,datos[4]);
+  print_test("No se modifico la posicion inicial de abb",abb_obtener(abb,claves[0]) == datos[0]);
+  abb_destruir(abb);
+  print_test("El arbol se destruyo correctamente",true);
+}
+
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
  * ******************************************************************/
@@ -240,7 +264,7 @@ static void pruebas_abb_volumen(size_t largo){
 
 void pruebas_abb_alumno()
 {
-    /* Ejecuta todas las pruebas unitarias. */
+  /* Ejecuta todas las pruebas unitarias. */
 	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
 	pruebas_abb_guardar_claves_iguales();
@@ -248,4 +272,5 @@ void pruebas_abb_alumno()
 	pruebas_abb_borrar_nodo_con_un_hijo();
 	pruebas_abb_borrar_nodo_con_dos_hijos();
 	pruebas_abb_volumen(5000);
+  pruebas_abb_iterador_interno();
 }

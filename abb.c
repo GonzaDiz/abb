@@ -251,7 +251,8 @@ void abb_destruir(abb_t *arbol){
 void iterar_inorder(nodo_t* nodo, bool visitar(const char *, void *, void *), void *extra){
 	if(!nodo) return;
 	iterar_inorder(nodo->izq,visitar,extra);
-	visitar(nodo->clave,nodo->dato,extra);
+	bool ok = visitar(nodo->clave,nodo->dato,extra);
+	if(!ok) return;
 	iterar_inorder(nodo->der,visitar,extra);
 }
 
@@ -265,23 +266,23 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
  *                       ITERADOR EXTERNO 						   *
  * *****************************************************************/
 
-abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
-	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
-	if(!iter) return NULL;
-	iter->arbol = arbol;
-}
+// abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
+// 	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
+// 	if(!iter) return NULL;
+// 	iter->arbol = arbol;
+// }
 
-bool abb_iter_in_avanzar(abb_iter_t *iter){
+// bool abb_iter_in_avanzar(abb_iter_t *iter){
+// 	return true; //placeholder
+// }
+// const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
+// 	return !iter->arbol->nodo ? NULL : iter->arbol->nodo>clave; 
+// }
 
-}
-const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
-	return !iter->arbol->nodo ? NULL : iter->arbol->nodo>clave; 
-}
+// bool abb_iter_in_al_final(const abb_iter_t *iter){
+// 	return !iter->arbol->nodo;
+// }
 
-bool abb_iter_in_al_final(const abb_iter_t *iter){
-	return !iter->arbol->nodo
-}
-
-void abb_iter_in_destruir(abb_iter_t* iter){
-	free(iter);
-}
+// void abb_iter_in_destruir(abb_iter_t* iter){
+// 	free(iter);
+// }
