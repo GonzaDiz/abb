@@ -66,6 +66,42 @@ static void pruebas_abb_guardar(){
 
 }
 
+static void pruebas_abb_guardar_claves_iguales(){
+	printf("---------------------------PRUEBAS ABB GUARDAR CLAVES IGUALES---------------------------\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+	char* claves[] = {"f","a","f","a"};
+	char* datos[] = {"f","a","f2","a2"};
+	print_test("Prueba crear abb vacio", abb);
+    print_test("Prueba la cantidad de nodos en el abb es igual a 0", abb_cantidad(abb) == 0);
+
+  // Prueba guardar el primer elemento
+	print_test("Prueba guardar un nodo de raiz",abb_guardar(abb,claves[0],datos[0]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 1", abb_cantidad(abb) == 1);
+	print_test("Prueba abb obtener devuelve f",abb_obtener(abb,claves[0]) == datos[0]);
+	print_test("Prueba abb pertenece devuelve true con clave f", abb_pertenece(abb,claves[0]) == true);
+
+	print_test("Prueba abb pertenee devuelve false con clave a", abb_pertenece(abb,claves[1]) == false);
+	print_test("Prueba guardar un nodo con clave a", abb_guardar(abb,claves[1],datos[1]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba abb obtener de clave a devuelve a", abb_obtener(abb,claves[1]) == datos[1]);
+	print_test("Prueba abb pertence devuelve true con clave a", abb_pertenece(abb,claves[1]) == true);
+
+	//	Prueba guardar un tercer elemento el cual es menor, hijo izquierdo
+	print_test("Prueba guardar un nodo con clave f", abb_guardar(abb,claves[2],datos[2]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba abb obtener de clave f devuelve f", abb_obtener(abb,claves[2]) == datos[2]);
+	print_test("Prueba abb pertence devuelve true con clave d", abb_pertenece(abb,claves[2]) == true);
+
+	print_test("Prueba guardar un nodo con clave a", abb_guardar(abb,claves[3],datos[3]) == true);
+	print_test("Prueba la cantidad de nodos en el abb es igual a 2", abb_cantidad(abb) == 2);
+	print_test("Prueba abb obtener de clave a devuelve a", abb_obtener(abb,claves[3]) == datos[3]);
+	print_test("Prueba abb pertence devuelve true con clave a", abb_pertenece(abb,claves[3]) == true);
+
+	abb_destruir(abb);
+	print_test("El arbol se destruyo correctamente",true);
+
+}
+
 static void pruebas_abb_borrar_hojas(){
 	printf("---------------------------PRUEBAS ABB BORRAR---------------------------\n");
 	abb_t* abb = abb_crear(strcmp,NULL);
@@ -123,7 +159,7 @@ static void pruebas_abb_borrar_nodo_con_un_hijo(){
 }
 
 static void pruebas_abb_borrar_nodo_con_dos_hijos(){
-printf("-------------------PRUEBAS ABB BORRAR NODO CON DOS HIJOS------------------------\n");
+	printf("-------------------PRUEBAS ABB BORRAR NODO CON DOS HIJOS------------------------\n");
 	abb_t* abb = abb_crear(strcmp,NULL);
 	char* claves[] = {"40","30","50","15","35","60","10","20","38"};
 	char* datos[] = {"40","30","50","15","35","60","10","20","38"};
@@ -156,23 +192,50 @@ static void pruebas_abb_volumen(size_t largo){
 	char (*claves)[largo_clave] = malloc (largo * largo_clave);
 	char (*datos)[largo_clave] = malloc (largo * largo_clave);
 
-	srand(time(NULL));
+	time_t t;
+	srand((unsigned) time(&t));
 	bool ok = true;
-	for (unsigned i = 0;i <largo;i++){
-		sprintf(claves[i], "%08d",(rand() % i));
-		sprintf(datos[i], "%08d",(rand () %i));
+	for (int i = 0;i <largo;i++){
+		sprintf(claves[i], "%08d",(rand() % 500000));
+
+		//Me aseguro que no haya claves repetidas asi puedo probar pertenece y obtener sin tantos problemas
+		while (abb_pertenece(abb,claves[i])){
+			sprintf(claves[i], "%08d", (rand() % 500000));
+		}
+		strcpy(datos[i],claves[i]);
+		//sprintf(datos[i],"%08d", claves[i]);
 		ok = abb_guardar(abb,claves[i],datos[i]);
 		if (!ok) break;
+		//printf("%08d\n",rand() % i);
 	}
-
 	print_test("Prueba abb guardar muchos elementos", ok);
-	print_test("Prueba la cantidad de elementos es correcta", abb_cantidad(abb) == largo);
+	print_test("Prueba abb cantidad",abb_cantidad(abb) == largo);
 
+	for (int i = 0;i < largo; i++){
+		ok = abb_pertenece(abb,claves[i]);
+		if (!ok) break;
+
+		ok = abb_obtener(abb,claves[i]) == datos[i];
+		if (!ok) break; 
+ 	}
+
+ 	print_test("Las claves y los datos pertenecen al abb",ok);
+
+ 	for (int i=0; i<(largo/2);i++){
+ 		ok = abb_borrar(abb,claves[i]) == datos[i];
+ 		if (!ok) break;
+ 	}
+
+ 	print_test("Borrar la mitad del abb es ok",ok);
+
+	abb_destruir(abb);
+	free(claves);
+	free(datos);
 }
 
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
- * *****************************************************************/
+ * ******************************************************************/
 
 
 void pruebas_abb_alumno()
@@ -180,8 +243,9 @@ void pruebas_abb_alumno()
     /* Ejecuta todas las pruebas unitarias. */
 	prueba_crear_abb_vacio();
 	pruebas_abb_guardar();
+	pruebas_abb_guardar_claves_iguales();
 	pruebas_abb_borrar_hojas();
 	pruebas_abb_borrar_nodo_con_un_hijo();
 	pruebas_abb_borrar_nodo_con_dos_hijos();
-	pruebas_abb_volumen(50000);
+	pruebas_abb_volumen(5000);
 }
