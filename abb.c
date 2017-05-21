@@ -277,3 +277,11 @@ bool abb_iter_in_avanzar(abb_iter_t *iter){
 const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
 	return !iter->arbol->nodo ? NULL : iter->arbol->nodo>clave; 
 }
+
+bool abb_iter_in_al_final(const abb_iter_t *iter){
+	return !iter->arbol->nodo
+}
+
+void abb_iter_in_destruir(abb_iter_t* iter){
+	free(iter);
+}
