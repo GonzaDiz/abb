@@ -26,6 +26,11 @@ struct abb {
 	abb_destruir_dato_t destructor;
 };
 
+/* Definicion del iterador externo */
+struct abb_iter {
+	abb_t* arbol;
+};
+
 /* *****************************************************************
  *                    FUNCIONES AUXILIARES						   *
  * *****************************************************************/
@@ -257,3 +262,16 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
 /* *****************************************************************
  *                       ITERADOR EXTERNO 						   *
  * *****************************************************************/
+
+abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
+	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
+	if(!iter) return NULL;
+	iter->arbol = arbol;
+}
+
+bool abb_iter_in_avanzar(abb_iter_t *iter){
+
+}
+const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
+	return !iter->arbol->nodo ? NULL : iter->arbol->nodo>clave; 
+}
