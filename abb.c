@@ -11,12 +11,12 @@
 
 /* Definicion de un nodo del abb */
 
-struct nodo {
+typedef struct nodo {
 	void* dato;
 	char* clave;
 	struct nodo* izq;
 	struct nodo* der;
-};
+}nodo_t;
 
 /* Definicion del abb */ 
 
@@ -299,17 +299,19 @@ static void abb_iter_in_crear_recursivo(pila_t* pila, nodo_t* nodo){
 
  bool abb_iter_in_avanzar(abb_iter_t *iter){
  	if (abb_iter_in_al_final(iter)) return false;
- 	pila_desapilar(iter->pila);
+ 	if (iter->pila != NULL) pila_desapilar(iter->pila);
  	if (pila_esta_vacia(iter->pila)) return false;
  	return true;
  }
 
  const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
+ 	if (abb_iter_in_al_final(iter)) return NULL;
  	nodo_t* nodo = pila_ver_tope(iter->pila);
  	return nodo->dato;
  }
 
  bool abb_iter_in_al_final(const abb_iter_t *iter){
+ 	if (iter->pila == NULL)
  	return pila_esta_vacia(iter->pila);
  }
 

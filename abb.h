@@ -11,7 +11,6 @@
 
 struct abb;  // Definición completa en abb.c.
 typedef struct abb abb_t;
-typedef struct nodo nodo_t;
 typedef struct abb_iter abb_iter_t; // iterador externo
 
 /* *****************************************************************
