@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -g -std=c99 -Wall -Wconversion -Wno-sign-conversion -Werror 
 
 all: 
-	$(CC) $(CFLAGS) -o $(EXEC) main.c abb.c testing.c pruebas_alumno.c
+	$(CC) $(CFLAGS) -o $(EXEC) main.c abb.c pila.c testing.c pruebas_alumno.c
 
 clean: 
 		rm $(EXEC) *.o
