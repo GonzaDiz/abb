@@ -1,4 +1,5 @@
 #include "abb.h"
+#include "pila.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,8 +14,8 @@
 struct nodo {
 	void* dato;
 	char* clave;
-	nodo_t* izq;
-	nodo_t* der;
+	struct nodo* izq;
+	struct nodo* der;
 };
 
 /* Definicion del abb */ 
@@ -28,7 +29,7 @@ struct abb {
 
 /* Definicion del iterador externo */
 struct abb_iter {
-	abb_t* arbol;
+	pila_t* pila;
 };
 
 /* *****************************************************************
@@ -266,23 +267,53 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
  *                       ITERADOR EXTERNO 						   *
  * *****************************************************************/
 
-// abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
-// 	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
-// 	if(!iter) return NULL;
-// 	iter->arbol = arbol;
-// }
 
-// bool abb_iter_in_avanzar(abb_iter_t *iter){
-// 	return true; //placeholder
-// }
-// const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
-// 	return !iter->arbol->nodo ? NULL : iter->arbol->nodo>clave; 
-// }
+/* En una pila lo primero que entra es lo ultimo en salir por ende debemos apilar primero el nodo q mas a la derecha
+del arbol este*/
+static void abb_iter_in_crear_recursivo(pila_t* pila, nodo_t* nodo){
+	if (nodo == NULL) return;
+	//Me corro lo mas a la derecha posible
+	if (nodo->der != NULL){
+		abb_iter_in_crear_recursivo(pila,nodo->der);
+	}
+	//Apilo el nodo
+	pila_apilar(pila,nodo);
+	//Me corro lo mas a la izquierda posible
+	if (nodo->izq!= NULL){
+		abb_iter_in_crear_recursivo(pila,nodo->izq);
+	}
+}
+ 
+ abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
+ 	if (!arbol) return NULL;
+ 	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
+ 	if(!iter) return NULL;
+ 	iter->pila = pila_crear();
+ 	if(!iter->pila){
+ 		free(iter);
+ 		return NULL;
+ 	}
+ 	abb_iter_in_crear_recursivo(iter->pila,arbol->nodo);
+ 	return iter;
+ }
 
-// bool abb_iter_in_al_final(const abb_iter_t *iter){
-// 	return !iter->arbol->nodo;
-// }
+ bool abb_iter_in_avanzar(abb_iter_t *iter){
+ 	if (abb_iter_in_al_final(iter)) return false;
+ 	pila_desapilar(iter->pila);
+ 	if (pila_esta_vacia(iter->pila)) return false;
+ 	return true;
+ }
 
-// void abb_iter_in_destruir(abb_iter_t* iter){
-// 	free(iter);
-// }
+ const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
+ 	nodo_t* nodo = pila_ver_tope(iter->pila);
+ 	return nodo->dato;
+ }
+
+ bool abb_iter_in_al_final(const abb_iter_t *iter){
+ 	return pila_esta_vacia(iter->pila);
+ }
+
+ void abb_iter_in_destruir(abb_iter_t* iter){
+ 	pila_destruir(iter->pila);
+ 	free(iter);
+ }
