@@ -1,10 +1,3 @@
-/*
- * prueba_hash.c
- * Pruebas para el tipo de dato abstracto Tabla de Hash
- * Copyright: (2011) Margarita Manterola, Maximiliano Curia
- * Licencia: CC-BY-SA 2.5 (ar) ó CC-BY-SA 3.0
- */
-
 #include "abb.h"
 #include "testing.h"
 #include <stdio.h>
@@ -257,6 +250,46 @@ printf("-------------------PRUEBAS ABB ITERARDOR INTERNO-----------------------\
   print_test("El arbol se destruyo correctamente",true);
 }
 
+static void pruebas_abb_iterador_externo(){
+printf("-------------------PRUEBAS ABB ITERARDOR EXTERNO-----------------------\n");
+  abb_t* abb = abb_crear(strcmp,NULL);
+  char* claves[] = {"40","30","50","15","35","60","10","20","38"};
+  char* datos[] = {"40","30","50","15","35","60","10","20","38"};
+  bool ok = true;
+  for (int i = 0; i<9; i++){
+    ok = abb_guardar(abb,claves[i],datos[i]);
+    if (!ok) break;
+  }
+  print_test("Prueba almacenar elementos", ok);
+  abb_iter_t* iter = abb_iter_in_crear(abb);
+  print_test("El iterador ha sido creado",true);
+  print_test("El actual del iterador es 10",abb_iter_in_ver_actual(iter) == datos[6]);
+  print_test("Avanzo en el iterador es verdadero",abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 15",abb_iter_in_ver_actual(iter) == datos[3]);
+  print_test("El iterador no esta al final",abb_iter_in_al_final(iter) == false);
+  print_test("Avanzo en el iterador es verdadero",abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 20",abb_iter_in_ver_actual(iter) == datos[7]);
+  print_test("Avanzo en el iterador es verdadero",abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 30",abb_iter_in_ver_actual(iter) == datos[1]);
+  print_test("Avanzo en el iterador es verdadero", abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 35",abb_iter_in_ver_actual(iter) == datos[4]);
+  print_test("Avanzo en el iterador es verdadero", abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 38",abb_iter_in_ver_actual(iter) == datos [8]);
+  print_test("Avanzo en el iterador es verdadero", abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 40", abb_iter_in_ver_actual(iter) == datos[0]);
+  print_test("Avanzo en el iterador es verdadero", abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 50", abb_iter_in_ver_actual(iter) == datos[2]);
+  print_test("Avanzo en el iterador es verdadero", abb_iter_in_avanzar(iter) == true);
+  print_test("El actual del iterador es 60", abb_iter_in_ver_actual(iter) == datos[5]);
+  print_test("Avanzo en el iterador es falso", abb_iter_in_avanzar(iter) == false);
+  print_test("Iterador esta al final es verdadero", abb_iter_in_al_final(iter) == true);
+
+  abb_destruir(abb);
+  print_test("ABB destruido",true);
+  abb_iter_in_destruir(iter);
+  print_test("Iterador destruido", true);
+}
+
 /* ******************************************************************
  *                        FUNCIÓN PRINCIPAL
  * ******************************************************************/
@@ -272,5 +305,6 @@ void pruebas_abb_alumno()
 	pruebas_abb_borrar_nodo_con_un_hijo();
 	pruebas_abb_borrar_nodo_con_dos_hijos();
 	pruebas_abb_volumen(5000);
-  pruebas_abb_iterador_interno();
+ 	pruebas_abb_iterador_interno();
+ 	pruebas_abb_iterador_externo();
 }
