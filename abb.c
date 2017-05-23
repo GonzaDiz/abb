@@ -311,7 +311,7 @@ static void abb_iter_in_crear_recursivo(pila_t* pila, nodo_t* nodo){
  }
 
  bool abb_iter_in_al_final(const abb_iter_t *iter){
- 	if (iter->pila == NULL)
+ 	if (iter->pila == NULL) return true;
  	return pila_esta_vacia(iter->pila);
  }
 
