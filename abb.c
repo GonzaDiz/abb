@@ -68,7 +68,7 @@ bool abb_guardar_recursivo(abb_t *arbol,nodo_t* nodo, nodo_t* nuevoNodo, const c
 		return abb_guardar_recursivo(arbol,nodo->izq,nuevoNodo,clave);	
 	}
 	else if (arbol->comparar(nodo->clave,clave) == 0){
-		if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+		if (arbol->destructor) arbol->destructor(nodo->dato);
 		void* dato = nuevoNodo->dato;
 		nodo->dato = dato;
 		//free(nodo->clave);
@@ -105,7 +105,7 @@ bool es_hoja(nodo_t* nodo){
 
 void* liberar_nodo(nodo_t* nodo,abb_t* arbol){
 	void* dato = nodo->dato;
-	if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+	if (arbol->destructor) arbol->destructor(nodo->dato);
 	arbol->cantidad--;
 	free(nodo->clave);
 	free(nodo);
@@ -179,7 +179,7 @@ void abb_destruir_recursivo(nodo_t* nodo,abb_t* arbol){
 	if (nodo == NULL) return;
 	abb_destruir_recursivo(nodo->der,arbol);
 	abb_destruir_recursivo(nodo->izq,arbol);
-	if (arbol->destructor) arbol->destructor(arbol->nodo->dato);
+	if (arbol->destructor) arbol->destructor(nodo->dato);
 	free(nodo->clave);
 	free(nodo);
 }
