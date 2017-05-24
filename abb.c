@@ -307,7 +307,7 @@ static void abb_iter_in_crear_recursivo(pila_t* pila, nodo_t* nodo){
  const char *abb_iter_in_ver_actual(const abb_iter_t *iter){
  	if (abb_iter_in_al_final(iter)) return NULL;
  	nodo_t* nodo = pila_ver_tope(iter->pila);
- 	return nodo->dato;
+ 	return nodo->clave;
  }
 
  bool abb_iter_in_al_final(const abb_iter_t *iter){
